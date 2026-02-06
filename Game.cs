@@ -18,13 +18,41 @@ class GameLogic
         piecesBlack =
         [
             new Piece(0, 0, '♜'),
-            new Piece(1, 0, '♞')
+            new Piece(1, 0, '♞'),
+            new Piece(2, 0, '♝'),
+            new Piece(3, 0, '♛'),
+            new Piece(4, 0, '♚'),
+            new Piece(5, 0, '♝'),
+            new Piece(6, 0, '♞'),
+            new Piece(7, 0, '♜'),
+            new Piece(0, 1, '♟'),
+            new Piece(1, 1, '♟'),
+            new Piece(2, 1, '♟'),
+            new Piece(3, 1, '♟'),
+            new Piece(4, 1, '♟'),
+            new Piece(5, 1, '♟'),
+            new Piece(6, 1, '♟'),
+            new Piece(7, 1, '♟'),
             //rest of pieces
         ];
         piecesWhite =
         [
             new Piece(0, 7, '♖'),
-            new Piece(1, 7, '♘')
+            new Piece(1, 7, '♘'),
+            new Piece(2, 7, '♗'),
+            new Piece(3, 7, '♕'),
+            new Piece(4, 7, '♔'),
+            new Piece(5, 7, '♗'),
+            new Piece(6, 7, '♘'),
+            new Piece(7, 7, '♖'),
+            new Piece(0, 6, '♙'),
+            new Piece(1, 6, '♙'),
+            new Piece(2, 6, '♙'),
+            new Piece(3, 6, '♙'),
+            new Piece(4, 6, '♙'),
+            new Piece(5, 6, '♙'),
+            new Piece(6, 6, '♙'),
+            new Piece(7, 6, '♙'),
             //rest of pieces
         ];
         board.Add(piecesWhite);
