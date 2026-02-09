@@ -9,11 +9,14 @@ class GameLogic
     // dead []Piece
 
     private ChessBoard board;
-    
+    private bool whiteTurn;
+
     // hey piece what can you do
     // -> 
     public GameLogic()
     {
+        whiteTurn = true;
+        
         board = new ChessBoard();
         piecesBlack =
         [
@@ -50,9 +53,28 @@ class GameLogic
         board.Add(piecesWhite);
         board.Add(piecesBlack);
     }
+
+    public ChessBoard GetBoard()
+    {
+        return board;
+    }
+
+    public String GetPlayerTurn()
+    {
+        return whiteTurn ? "White" : "Black";
+    }
+
+    public void submitTurn(int sx, int sy, int ex, int ey)
+    {
+        //select Piece
+        //select move
+        //validate move
+        //Error or Move Piece
+        whiteTurn = !whiteTurn;
+    }
 }
 
-class Piece
+public class Piece
 {
     private bool isDead;
     public int x, y;
@@ -73,7 +95,7 @@ class Piece
     }
 }
 
-class ChessBoard
+public class ChessBoard
 {
     public List<List<Piece?>> gridOfPieces;
 
