@@ -5,6 +5,7 @@ namespace chess;
 public partial class Form1 : Form
 {
     private const int SquareSize = 75;
+    private const int SquareBorder = 15;
     private const int StartX = 340;
     private const int StartY = 40;
     private GameLogic gameLogic;
@@ -16,31 +17,53 @@ public partial class Form1 : Form
         StartPosition = FormStartPosition.CenterScreen;
         InitializeComponent();
         gameLogic = new GameLogic();
-        chess_Board(gameLogic.GetBoard());
+        create_Board();
     }
 
-    public void panel_Creator(bool isThisWhite, int y, int x)
+    public void create_Panel(bool isThisWhite, int x, int y)
     {
-        Panel p = new System.Windows.Forms.Panel();
+        Panel square = new Panel();
+
+        square.BackColor = isThisWhite ? Color.White : Color.Black;
         
-        if (isThisWhite)
-        {
-            p.BackColor = System.Drawing.Color.White;
-        }
-        else
-        {
-            p.BackColor = System.Drawing.Color.Black;
-        }
-        
-        p.Location = new System.Drawing.Point(StartX + (x * SquareSize), StartY + (y * SquareSize));
-        p.MaximumSize = new System.Drawing.Size(SquareSize, SquareSize);
-        p.MinimumSize = new System.Drawing.Size(SquareSize, SquareSize);
-        p.Size = new System.Drawing.Size(SquareSize, SquareSize);
-        
-        Controls.Add(p);
+        square.Location = new Point(StartX + (x * SquareSize), StartY + (y * SquareSize));
+        square.MaximumSize = new Size(SquareSize, SquareSize);
+        square.MinimumSize = new Size(SquareSize, SquareSize);
+        square.Size = new Size(SquareSize, SquareSize);
+        square.Name = "panel_" + x + "_" + y;
+
+        Label displayPiece = new Label();
+        displayPiece.MinimumSize = new Size(SquareSize-(SquareBorder*2), SquareSize-(SquareBorder*2));
+        displayPiece.MaximumSize = new Size(SquareSize-(SquareBorder*2), SquareSize-(SquareBorder*2));
+        displayPiece.Location = new Point(SquareBorder, SquareBorder);
+        displayPiece.Name = "label_piece";
+        displayPiece.Font = new Font("Comic Sans", 30);
+        displayPiece.TextAlign = ContentAlignment.TopCenter;
+        displayPiece.BackColor = Color.White;
+        Piece? currentPiece = gameLogic.GetPiece(x, y);
+        displayPiece.Text = currentPiece == null ? " " : currentPiece.GetSymbol().ToString();
+        square.Controls.Add(displayPiece);
+
+        Controls.Add(square);
     }
     
-    public void chess_Board(ChessBoard board)
+    public void update_Square(int x, int y)
+    {
+        // find the panel at x and y
+        
+        Panel? p = Controls[Controls.IndexOfKey("panel_" + x + "_" + y)] as Panel;
+
+        // find the label
+        Label? displayPiece = p.Controls[p.Controls.IndexOfKey("label_piece")] as Label;
+        
+        // get the piece
+        Piece? currentPiece = gameLogic.GetPiece(x, y);
+
+        // update
+        displayPiece.Text = currentPiece == null ? " " : currentPiece.GetSymbol().ToString();
+    }
+    
+    public void create_Board()
     {
         SuspendLayout();
         bool isWhite = true;
@@ -50,17 +73,19 @@ public partial class Form1 : Form
         {
             for (int x = 0; x < 8; x++)
             {
-                panel_Creator(isWhite, y, x);
+                create_Panel(isWhite, x, y);
                 isWhite = !isWhite;
             }
             isWhite = !isWhite;
         }
         ResumeLayout(false);
     }
- 
+
     private void button1_Click_1(object sender, EventArgs e)
     {
-        gameLogic.submitTurn(0,0,0,0);
+        gameLogic.submitTurn(0,6, 0,5);
+        update_Square(0,6);
+        update_Square(0,5);
         label1.Text = gameLogic.GetPlayerTurn() + "'s turn";
     }
     

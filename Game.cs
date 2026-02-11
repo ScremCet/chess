@@ -54,9 +54,9 @@ class GameLogic
         board.Add(piecesBlack);
     }
 
-    public ChessBoard GetBoard()
+    public Piece? GetPiece(int x, int y)
     {
-        return board;
+        return board.gridOfPieces[y][x];
     }
 
     public String GetPlayerTurn()
@@ -67,9 +67,20 @@ class GameLogic
     public void submitTurn(int sx, int sy, int ex, int ey)
     {
         //select Piece
+        Piece? selectedPiece = board.gridOfPieces[sy][sx];
+        if (selectedPiece == null)
+        {
+            return;
+        }
+        
+        board.gridOfPieces[sy][sx] = null;
         //select move
+        selectedPiece.x = ex; 
+        selectedPiece.y = ey;
+        board.gridOfPieces[ey][ex] = selectedPiece;
         //validate move
         //Error or Move Piece
+        
         whiteTurn = !whiteTurn;
     }
 }

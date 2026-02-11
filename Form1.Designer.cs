@@ -65,6 +65,7 @@ partial class Form1
         // 
         // textBox2
         // 
+        textBox2.BackColor = System.Drawing.SystemColors.Window;
         textBox2.Location = new System.Drawing.Point(1085, 570);
         textBox2.Name = "textBox2";
         textBox2.Size = new System.Drawing.Size(150, 23);
@@ -80,6 +81,7 @@ partial class Form1
         Controls.Add(textBox1);
         Controls.Add(button1);
         Controls.Add(label1);
+        Tag = "";
         Text = "Form1";
         ResumeLayout(false);
         PerformLayout();
