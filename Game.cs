@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using chess;
+using chess.pieces;
 
 namespace Chess;
 
@@ -20,35 +22,35 @@ class GameLogic
         board = new ChessBoard();
         piecesBlack =
         [
-            new Piece(0, 0, '♜'),
-            new Piece(1, 0, '♞'),
-            new Piece(2, 0, '♝'),
-            new Piece(3, 0, '♛'),
-            new Piece(4, 0, '♚'),
-            new Piece(5, 0, '♝'),
-            new Piece(6, 0, '♞'),
-            new Piece(7, 0, '♜'),
+            new Temp(0, 0, '♜'),
+            new Temp(1, 0, '♞'),
+            new Temp(2, 0, '♝'),
+            new Temp(3, 0, '♛'),
+            new Temp(4, 0, '♚'),
+            new Temp(5, 0, '♝'),
+            new Temp(6, 0, '♞'),
+            new Temp(7, 0, '♜'),
             //rest of pieces
         ];
-        for (int i = 0; i < 8; i++)
+        for (int x = 0; x < 8; x++)
         {
-            piecesBlack.Add(new Piece(i , 1, '♟' ));
+            piecesBlack.Add(new Pawn(false , x, 1 ));
         }
         
         piecesWhite =
         [
-            new Piece(0, 7, '♖'),
-            new Piece(1, 7, '♘'),
-            new Piece(2, 7, '♗'),
-            new Piece(3, 7, '♕'),
-            new Piece(4, 7, '♔'),
-            new Piece(5, 7, '♗'),
-            new Piece(6, 7, '♘'),
-            new Piece(7, 7, '♖'),
+            new Temp(0, 7, '♖'),
+            new Temp(1, 7, '♘'),
+            new Temp(2, 7, '♗'),
+            new Temp(3, 7, '♕'),
+            new Temp(4, 7, '♔'),
+            new Temp(5, 7, '♗'),
+            new Temp(6, 7, '♘'),
+            new Temp(7, 7, '♖'),
         ];
-        for (int i = 0; i < 8; i++)
+        for (int x = 0; x < 8; x++)
         {
-            piecesWhite.Add(new Piece(i , 6, '♙' ));
+            piecesWhite.Add(new Pawn(true , x , 6 ));
         }
         board.Add(piecesWhite);
         board.Add(piecesBlack);
@@ -72,11 +74,14 @@ class GameLogic
         {
             return;
         }
-        
+        if (!selectedPiece.CheckMove(ex, ey, GetPiece))
+        {
+            return;
+        };
         board.gridOfPieces[sy][sx] = null;
         //select move
-        selectedPiece.x = ex; 
-        selectedPiece.y = ey;
+        selectedPiece.X = ex; 
+        selectedPiece.Y = ey;
         board.gridOfPieces[ey][ex] = selectedPiece;
         //validate move
         //Error or Move Piece
@@ -85,18 +90,30 @@ class GameLogic
     }
 }
 
-public class Piece
+public class Temp : Piece
 {
     private bool isDead;
-    public int x, y;
+    public int X { get; set; }
+    public int Y { get; set; }
+    
+    public bool CheckMove(int x, int y, Func<int, int, Piece?> getPiece)
+    {
+        return false;
+    }
+
+    public bool IsWhite()
+    {
+        return true;
+    }
+
     private char symbol;
     
-    public Piece(int x, int y, char symbol)
+    public Temp(int x, int y, char symbol)
     {
         isDead = false;
         
-        this.x = x;
-        this.y = y;
+        this.X = x;
+        this.Y = y;
         this.symbol = symbol;
     }
 
@@ -104,6 +121,7 @@ public class Piece
     {
         return this.symbol;
     }
+    
 }
 
 public class ChessBoard
@@ -114,7 +132,7 @@ public class ChessBoard
     {
         foreach (Piece piece in pieces)
         {
-            gridOfPieces[piece.y][piece.x] = piece;
+            gridOfPieces[piece.Y][piece.X] = piece;
         };
     }
 

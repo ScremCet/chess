@@ -20,7 +20,7 @@ public partial class Form1 : Form
         create_Board();
     }
 
-    public void create_Panel(bool isThisWhite, int x, int y)
+    public void create_Square(bool isThisWhite, int x, int y)
     {
         Panel square = new Panel();
 
@@ -43,7 +43,7 @@ public partial class Form1 : Form
         Piece? currentPiece = gameLogic.GetPiece(x, y);
         displayPiece.Text = currentPiece == null ? " " : currentPiece.GetSymbol().ToString();
         square.Controls.Add(displayPiece);
-
+        
         Controls.Add(square);
     }
     
@@ -73,7 +73,7 @@ public partial class Form1 : Form
         {
             for (int x = 0; x < 8; x++)
             {
-                create_Panel(isWhite, x, y);
+                create_Square(isWhite, x, y);
                 isWhite = !isWhite;
             }
             isWhite = !isWhite;
@@ -83,10 +83,10 @@ public partial class Form1 : Form
 
     private void button1_Click_1(object sender, EventArgs e)
     {
-        gameLogic.submitTurn(0,6, 0,5);
-        update_Square(0,6);
-        update_Square(0,5);
+        
+        gameLogic.submitTurn(1,1, 1,3);
+        update_Square(1,1);
+        update_Square(1,3);
         label1.Text = gameLogic.GetPlayerTurn() + "'s turn";
     }
-    
 }
