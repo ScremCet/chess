@@ -81,12 +81,16 @@ public partial class Form1 : Form
         ResumeLayout(false);
     }
 
-    private void button1_Click_1(object sender, EventArgs e)
+    private void submit_Click_1(object sender, EventArgs e)
     {
+        int sx = SX.Text[0] - 65;
+        int sy = 7 - (SY.Text[0] - 49);
+        int ex = EX.Text[0] - 65;
+        int ey = 7 - (EY.Text[0] - 49);
         
-        gameLogic.submitTurn(1,1, 1,3);
-        update_Square(1,1);
-        update_Square(1,3);
+        gameLogic.submitTurn(sx,sy,ex,ey);
+        update_Square(sx,sy);
+        update_Square(ex,ey);
         label1.Text = gameLogic.GetPlayerTurn() + "'s turn";
     }
 }

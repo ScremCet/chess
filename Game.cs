@@ -23,12 +23,12 @@ class GameLogic
         piecesBlack =
         [
             new Temp(0, 0, '♜'),
-            new Temp(1, 0, '♞'),
+            new Honse(false, 1, 0),
             new Temp(2, 0, '♝'),
             new Temp(3, 0, '♛'),
             new Temp(4, 0, '♚'),
             new Temp(5, 0, '♝'),
-            new Temp(6, 0, '♞'),
+            new Honse(false, 6, 0),
             new Temp(7, 0, '♜'),
             //rest of pieces
         ];
@@ -40,12 +40,12 @@ class GameLogic
         piecesWhite =
         [
             new Temp(0, 7, '♖'),
-            new Temp(1, 7, '♘'),
+            new Honse(true, 1, 7),
             new Temp(2, 7, '♗'),
             new Temp(3, 7, '♕'),
             new Temp(4, 7, '♔'),
             new Temp(5, 7, '♗'),
-            new Temp(6, 7, '♘'),
+            new Honse(true, 6, 7),
             new Temp(7, 7, '♖'),
         ];
         for (int x = 0; x < 8; x++)
@@ -84,40 +84,31 @@ class GameLogic
         selectedPiece.Y = ey;
         board.gridOfPieces[ey][ex] = selectedPiece;
         //validate move
+        
         //Error or Move Piece
         
         whiteTurn = !whiteTurn;
     }
 }
 
-public class Temp : Piece
+public class Temp : CommonPiece
 {
     private bool isDead;
-    public int X { get; set; }
-    public int Y { get; set; }
     
-    public bool CheckMove(int x, int y, Func<int, int, Piece?> getPiece)
+    public override bool CheckMove(int x, int y, Func<int, int, Piece?> getPiece)
     {
         return false;
     }
 
-    public bool IsWhite()
-    {
-        return true;
-    }
-
     private char symbol;
     
-    public Temp(int x, int y, char symbol)
+    public Temp(int x, int y, char symbol) : base(true, x, y)
     {
         isDead = false;
-        
-        this.X = x;
-        this.Y = y;
         this.symbol = symbol;
     }
 
-    public char GetSymbol()
+    public override char GetSymbol()
     {
         return this.symbol;
     }
