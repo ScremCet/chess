@@ -2,14 +2,13 @@
 
 public abstract class CommonPiece : Piece
 {
-    public CommonPiece(bool isWhite, int x, int y)
+    public CommonPiece(Allegiance allegiance, int x, int y)
     {
-        this.isWhite = isWhite;
+        this._allegiance = allegiance;
         X = x;
         Y = y;
-        
     }
-    private bool isWhite;
+    private Allegiance _allegiance;
 
     public abstract char GetSymbol();
     public int X { get; set; }
@@ -17,13 +16,12 @@ public abstract class CommonPiece : Piece
 
     public bool OnSameTeam(Piece other)
     {
-        return this.IsWhite() == other.IsWhite();
+        return GetAllegiance() == other.GetAllegiance();
     }
 
-    public abstract bool CheckMove(int x, int y, Func<int, int, Piece?> getPiece);
-
-    public bool IsWhite()
+    public abstract bool IsValidMove(int x, int y, Func<int, int, Piece?> getPiece);
+    public Allegiance GetAllegiance()
     {
-        return isWhite;
+        return _allegiance;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms.VisualStyles;
 using chess;
 using chess.pieces;
 
@@ -6,105 +7,143 @@ namespace Chess;
 
 class GameLogic
 {
-    private List<Piece> piecesWhite;
-    private List<Piece> piecesBlack;
+    private List<Piece> _piecesWhite;
+    private List<Piece> _piecesBlack;
     // dead []Piece
 
-    private ChessBoard board;
-    private bool whiteTurn;
-
+    private ChessBoard _board;
+    private Allegiance _playerTurn;
+    private King _kingWhite;
+    private King _kingBlack;
     // hey piece what can you do
     // -> 
     public GameLogic()
     {
-        whiteTurn = true;
-        
-        board = new ChessBoard();
-        piecesBlack =
+        _playerTurn = Allegiance.White;
+        _kingWhite = new King(Allegiance.White, 4, 7);
+        _kingBlack = new King(Allegiance.Black, 4, 0);            
+        _board = new ChessBoard();
+        _piecesBlack =
         [
             new Temp(0, 0, '♜'),
-            new Honse(false, 1, 0),
+            new Honse(Allegiance.Black, 1, 0),
             new Temp(2, 0, '♝'),
             new Temp(3, 0, '♛'),
-            new Temp(4, 0, '♚'),
+            _kingBlack,       
             new Temp(5, 0, '♝'),
-            new Honse(false, 6, 0),
+            new Honse(Allegiance.Black, 6, 0),
             new Temp(7, 0, '♜'),
             //rest of pieces
         ];
         for (int x = 0; x < 8; x++)
         {
-            piecesBlack.Add(new Pawn(false , x, 1 ));
+            _piecesBlack.Add(new Pawn(Allegiance.Black , x, 1 ));
         }
         
-        piecesWhite =
+        _piecesWhite =
         [
             new Temp(0, 7, '♖'),
-            new Honse(true, 1, 7),
+            new Honse(Allegiance.White, 1, 7),
             new Temp(2, 7, '♗'),
             new Temp(3, 7, '♕'),
-            new Temp(4, 7, '♔'),
+            _kingWhite,
             new Temp(5, 7, '♗'),
-            new Honse(true, 6, 7),
+            new Honse(Allegiance.White, 6, 7),
             new Temp(7, 7, '♖'),
         ];
         for (int x = 0; x < 8; x++)
         {
-            piecesWhite.Add(new Pawn(true , x , 6 ));
+            _piecesWhite.Add(new Pawn(Allegiance.White , x , 6 ));
         }
-        board.Add(piecesWhite);
-        board.Add(piecesBlack);
+        _board.Add(_piecesWhite);
+        _board.Add(_piecesBlack);
     }
 
     public Piece? GetPiece(int x, int y)
     {
-        return board.gridOfPieces[y][x];
+        return _board.gridOfPieces[y][x];
     }
 
-    public String GetPlayerTurn()
+    public Allegiance GetPlayerTurn()
     {
-        return whiteTurn ? "White" : "Black";
+        
+        return _playerTurn;
     }
 
-    public void submitTurn(int sx, int sy, int ex, int ey)
+    private bool block;
+    public bool IsCheckMate()
     {
-        //select Piece
-        Piece? selectedPiece = board.gridOfPieces[sy][sx];
-        if (selectedPiece == null)
+        throw new NotImplementedException();
+    }
+    
+    public bool IsCheck(Allegiance allegiance)
+    {
+        
+        //get king
+        King currentKing = allegiance == Allegiance.White ? _kingWhite : _kingBlack;
+        List<Piece> evilPieces = currentKing.GetAllegiance() == Allegiance.White ? _piecesBlack : _piecesWhite;
+        //check all possible attacks
+        foreach (Piece piece in evilPieces)
         {
-            return;
+            if (piece.IsValidMove(currentKing.X, currentKing.Y, GetPiece))
+            {
+                return true;
+            }
         }
-        if (!selectedPiece.CheckMove(ex, ey, GetPiece))
-        {
-            return;
-        };
-        board.gridOfPieces[sy][sx] = null;
-        //select move
+        //check if correct piece type
+        return false;
+        //check if enemy does
+    }
+
+    private void MovePiece(Piece selectedPiece, int ex, int ey)
+    {
+        _board.gridOfPieces[selectedPiece.Y][selectedPiece.X] = null;
         selectedPiece.X = ex; 
         selectedPiece.Y = ey;
-        board.gridOfPieces[ey][ex] = selectedPiece;
-        //validate move
+        _board.gridOfPieces[ey][ex] = selectedPiece;
+    }
+    
+    public TurnStatus submitTurn(int sx, int sy, int ex, int ey)
+    {
+        Piece? selectedPiece = GetPiece(sx, sy);
+        if (selectedPiece == null)
+        {
+            return TurnStatus.ErrNoPiece;
+        }
+        if (selectedPiece.GetAllegiance() != _playerTurn)
+        {
+            return TurnStatus.ErrInvalidColor;
+        }
+        // if (IsCheck())
+        // {
+        //     return TurnStatus.ErrCheck;
+        // }
+        if (!selectedPiece.IsValidMove(ex, ey, GetPiece))
+        {
+            return TurnStatus.ErrInvalidMove;
+        };
         
-        //Error or Move Piece
-        
-        whiteTurn = !whiteTurn;
+        MovePiece(selectedPiece, ex, ey);
+        //switch turn
+        _playerTurn = _playerTurn == Allegiance.White ? Allegiance.Black : Allegiance.White;
+        return TurnStatus.Success;
     }
 }
 
 public class Temp : CommonPiece
 {
-    private bool isDead;
+    private bool _isDead;
     
-    public override bool CheckMove(int x, int y, Func<int, int, Piece?> getPiece)
+    public override bool IsValidMove(int x, int y, Func<int, int, Piece?> getPiece)
     {
         return false;
     }
 
     private char symbol;
     
-    public Temp(int x, int y, char symbol) : base(true, x, y)
+    public Temp(int x, int y, char symbol) : base(Allegiance.White, x, y)
     {
-        isDead = false;
+        _isDead = false;
         this.symbol = symbol;
     }
 

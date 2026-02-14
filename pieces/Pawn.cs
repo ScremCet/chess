@@ -2,17 +2,17 @@
 
 public class Pawn : CommonPiece
 {
-    public Pawn(bool isWhite, int x, int y) : base(isWhite, x, y){}
+    public Pawn(Allegiance allegiance, int x, int y) : base(allegiance, x, y){}
     
     public override char GetSymbol()
     {
-        return IsWhite() ? '♙' : '♟';
+        return GetAllegiance() == Allegiance.White ? '♙' : '♟';
     }
 
-    public override bool CheckMove(int x, int y, Func<int, int, Piece?> getPiece)
+    public override bool IsValidMove(int x, int y, Func<int, int, Piece?> getPiece)
     {
         //move forward 1
-        if (X == x && (IsWhite() ? Y - 1 == y  : Y  + 1 == y))
+        if (X == x && (GetAllegiance() == Allegiance.White ? Y - 1 == y  : Y  + 1 == y))
         {
             if (getPiece(x,y) == null)
             {
@@ -20,11 +20,11 @@ public class Pawn : CommonPiece
             }
         }
         //move forward 2 when not moved yet
-        if (IsWhite() ? Y == 6 : Y == 1)
+        if (GetAllegiance() == Allegiance.White ? Y == 6 : Y == 1)
         {
-            if (X == x && (IsWhite() ? Y - 2 == y  : Y  + 2 == y))
+            if (X == x && (GetAllegiance() == Allegiance.White ? Y - 2 == y  : Y  + 2 == y))
             {
-                if (getPiece(x,y) == null && getPiece(x, IsWhite() ? y + 1 : y - 1) == null)
+                if (getPiece(x,y) == null && getPiece(x, GetAllegiance() == Allegiance.White ? y + 1 : y - 1) == null)
                 {
                     return true;
                 }

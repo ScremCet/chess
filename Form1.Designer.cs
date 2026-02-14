@@ -83,7 +83,7 @@ partial class Form1
         // 
         SY.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         SY.FormattingEnabled = true;
-        SY.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8" });
+        SY.Items.AddRange(new object[] { "8", "7", "6", "5", "4", "3", "2", "1"});
         SY.Location = new System.Drawing.Point(1146, 130);
         SY.Name = "SY";
         SY.Size = new System.Drawing.Size(42, 23);
@@ -93,7 +93,7 @@ partial class Form1
         // 
         EY.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         EY.FormattingEnabled = true;
-        EY.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8" });
+        EY.Items.AddRange(new object[] { "8", "7", "6", "5", "4", "3", "2", "1"});
         EY.Location = new System.Drawing.Point(1146, 169);
         EY.Name = "EY";
         EY.Size = new System.Drawing.Size(42, 23);

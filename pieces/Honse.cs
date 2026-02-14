@@ -2,26 +2,26 @@
 
 public class Honse : CommonPiece
 {
-    public Honse(bool isWhite, int x, int y) : base(isWhite, x, y){}
+    public Honse(Allegiance allegiance, int x, int y) : base(allegiance, x, y){}
     
-    private static readonly HashSet<(int,int)> honseMove = new()
+    private static readonly HashSet<(int,int)> _honseMove = new()
     {
         (-1,+2), (+1,+2), (-1,-2), (+1,-2), (-2,+1), (+2,+1), (-2,-1), (+2,-1)
     };
     
     public override char GetSymbol()
     {
-        return IsWhite() ? '♘' : '♞';
+        return GetAllegiance() == Allegiance.White ? '♘' : '♞';
     }
     
-    public override bool CheckMove(int x, int y, Func<int, int, Piece?> getPiece)
+    public override bool IsValidMove(int x, int y, Func<int, int, Piece?> getPiece)
     {
         // move vector
         
-        if (honseMove.Contains((x - X , y - Y)))
+        if (_honseMove.Contains((x - X , y - Y)))
         {
             Piece? whatThere = getPiece(x, y);
-            if (whatThere == null || !OnSameTeam(whatThere))
+            if (whatThere is null || !OnSameTeam(whatThere))
             {
                 return true;
             }

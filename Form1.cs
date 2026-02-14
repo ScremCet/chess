@@ -4,11 +4,11 @@ namespace chess;
 
 public partial class Form1 : Form
 {
-    private const int SquareSize = 75;
-    private const int SquareBorder = 15;
-    private const int StartX = 340;
-    private const int StartY = 40;
-    private GameLogic gameLogic;
+    private const int _SquareSize = 75;
+    private const int _SquareBorder = 15;
+    private const int _StartX = 340;
+    private const int _StartY = 40;
+    private GameLogic _gameLogic;
     public Form1()
     {
         MaximizeBox = false;
@@ -16,7 +16,7 @@ public partial class Form1 : Form
         MinimumSize = new Size(1280, 720);
         StartPosition = FormStartPosition.CenterScreen;
         InitializeComponent();
-        gameLogic = new GameLogic();
+        _gameLogic = new GameLogic();
         create_Board();
     }
 
@@ -26,21 +26,21 @@ public partial class Form1 : Form
 
         square.BackColor = isThisWhite ? Color.White : Color.Black;
         
-        square.Location = new Point(StartX + (x * SquareSize), StartY + (y * SquareSize));
-        square.MaximumSize = new Size(SquareSize, SquareSize);
-        square.MinimumSize = new Size(SquareSize, SquareSize);
-        square.Size = new Size(SquareSize, SquareSize);
+        square.Location = new Point(_StartX + (x * _SquareSize), _StartY + (y * _SquareSize));
+        square.MaximumSize = new Size(_SquareSize, _SquareSize);
+        square.MinimumSize = new Size(_SquareSize, _SquareSize);
+        square.Size = new Size(_SquareSize, _SquareSize);
         square.Name = "panel_" + x + "_" + y;
 
         Label displayPiece = new Label();
-        displayPiece.MinimumSize = new Size(SquareSize-(SquareBorder*2), SquareSize-(SquareBorder*2));
-        displayPiece.MaximumSize = new Size(SquareSize-(SquareBorder*2), SquareSize-(SquareBorder*2));
-        displayPiece.Location = new Point(SquareBorder, SquareBorder);
+        displayPiece.MinimumSize = new Size(_SquareSize-(_SquareBorder*2), _SquareSize-(_SquareBorder*2));
+        displayPiece.MaximumSize = new Size(_SquareSize-(_SquareBorder*2), _SquareSize-(_SquareBorder*2));
+        displayPiece.Location = new Point(_SquareBorder, _SquareBorder);
         displayPiece.Name = "label_piece";
         displayPiece.Font = new Font("Comic Sans", 30);
         displayPiece.TextAlign = ContentAlignment.TopCenter;
         displayPiece.BackColor = Color.White;
-        Piece? currentPiece = gameLogic.GetPiece(x, y);
+        Piece? currentPiece = _gameLogic.GetPiece(x, y);
         displayPiece.Text = currentPiece == null ? " " : currentPiece.GetSymbol().ToString();
         square.Controls.Add(displayPiece);
         
@@ -57,7 +57,7 @@ public partial class Form1 : Form
         Label? displayPiece = p.Controls[p.Controls.IndexOfKey("label_piece")] as Label;
         
         // get the piece
-        Piece? currentPiece = gameLogic.GetPiece(x, y);
+        Piece? currentPiece = _gameLogic.GetPiece(x, y);
 
         // update
         displayPiece.Text = currentPiece == null ? " " : currentPiece.GetSymbol().ToString();
@@ -88,9 +88,9 @@ public partial class Form1 : Form
         int ex = EX.Text[0] - 65;
         int ey = 7 - (EY.Text[0] - 49);
         
-        gameLogic.submitTurn(sx,sy,ex,ey);
+        _gameLogic.submitTurn(sx,sy,ex,ey);
         update_Square(sx,sy);
         update_Square(ex,ey);
-        label1.Text = gameLogic.GetPlayerTurn() + "'s turn";
+        label1.Text = _gameLogic.GetPlayerTurn() + "'s turn";
     }
 }
