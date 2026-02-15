@@ -7,7 +7,7 @@ public enum TurnStatus
     ErrWillCheck,
     CheckMate,
     ErrNoPiece, 
-    ErrInvalidColor, 
+    ErrInvalidAllegiance, 
     ErrInvalidMove, 
     ErrInvalidSpecialMove
 }

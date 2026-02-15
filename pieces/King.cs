@@ -2,7 +2,7 @@
 
 public class King : CommonPiece
 {
-    public King(Allegiance allegiance, int x, int y) : base(allegiance, x, y)
+    public King(Allegiance allegiance, (int,int) pos) : base(allegiance, pos)
     {
         
     }
@@ -16,11 +16,11 @@ public class King : CommonPiece
     {
         return GetAllegiance() == Allegiance.White ? '♔' : '♚';
     }
-    public override bool IsValidMove(int x, int y, Func<int, int, Piece?> getPiece)
+    public override bool IsValidMove((int,int) dest, Func<(int,int), Piece?> getPiece)
     {
-        if (_kingMove.Contains((x - X, y - Y)))
+        if (_kingMove.Contains(Coord.Vector(Pos, dest)))
         {
-            Piece? whatThere = getPiece(x, y);
+            Piece? whatThere = getPiece(dest);
             if (whatThere is null || !OnSameTeam(whatThere))
             {
                 return true;

@@ -2,37 +2,48 @@
 
 public class Pawn : CommonPiece
 {
-    public Pawn(Allegiance allegiance, int x, int y) : base(allegiance, x, y){}
+    public Pawn(Allegiance allegiance, (int,int) pos) : base(allegiance, pos){}
     
     public override char GetSymbol()
     {
         return GetAllegiance() == Allegiance.White ? '♙' : '♟';
     }
 
-    public override bool IsValidMove(int x, int y, Func<int, int, Piece?> getPiece)
+    public override bool IsValidMove((int,int) dest, Func<(int,int), Piece?> getPiece)
     {
-        //move forward 1
-        if (X == x && (GetAllegiance() == Allegiance.White ? Y - 1 == y  : Y  + 1 == y))
+        (int,int) vect = Coord.Vector(Pos, dest);
+        (int, int) relVect = (vect.Item1, vect.Item2);
+        if (GetAllegiance() == Allegiance.White)
         {
-            if (getPiece(x,y) == null)
-            {
-                return true;
-            }
+            relVect.Item2 *= -1;
         }
-        //move forward 2 when not moved yet
-        if (GetAllegiance() == Allegiance.White ? Y == 6 : Y == 1)
+
+        switch (relVect)
         {
-            if (X == x && (GetAllegiance() == Allegiance.White ? Y - 2 == y  : Y  + 2 == y))
-            {
-                if (getPiece(x,y) == null && getPiece(x, GetAllegiance() == Allegiance.White ? y + 1 : y - 1) == null)
+            case (0, 1):
+                if (getPiece(dest) == null)
                 {
                     return true;
                 }
-            }
+                break;
+            case (0, 2):
+                if (!_hasMoved
+                    && getPiece(dest) == null
+                    && getPiece(Coord.Add(Pos, Coord.Step(vect))) == null /*Check the position one Step ahead*/
+                   )
+                {
+                    return true;
+                }
+                break;
+            case (1, 1): 
+            case (-1, 1):
+                var destPiece = getPiece(dest);
+                if (destPiece != null && !OnSameTeam(destPiece))
+                {
+                    return true;
+                }
+                break;
         }
-        
-        //Kill Diag 1
-        
         return false;
     }
 }

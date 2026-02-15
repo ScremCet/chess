@@ -37,6 +37,7 @@ partial class Form1
         EY = new System.Windows.Forms.ComboBox();
         label2 = new System.Windows.Forms.Label();
         label3 = new System.Windows.Forms.Label();
+        StatOut = new System.Windows.Forms.Label();
         SuspendLayout();
         // 
         // submit
@@ -83,7 +84,7 @@ partial class Form1
         // 
         SY.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         SY.FormattingEnabled = true;
-        SY.Items.AddRange(new object[] { "8", "7", "6", "5", "4", "3", "2", "1"});
+        SY.Items.AddRange(new object[] { "8", "7", "6", "5", "4", "3", "2", "1" });
         SY.Location = new System.Drawing.Point(1146, 130);
         SY.Name = "SY";
         SY.Size = new System.Drawing.Size(42, 23);
@@ -93,7 +94,7 @@ partial class Form1
         // 
         EY.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         EY.FormattingEnabled = true;
-        EY.Items.AddRange(new object[] { "8", "7", "6", "5", "4", "3", "2", "1"});
+        EY.Items.AddRange(new object[] { "8", "7", "6", "5", "4", "3", "2", "1" });
         EY.Location = new System.Drawing.Point(1146, 169);
         EY.Name = "EY";
         EY.Size = new System.Drawing.Size(42, 23);
@@ -117,12 +118,22 @@ partial class Form1
         label3.TabIndex = 15;
         label3.Text = "To";
         // 
+        // StatOut
+        // 
+        StatOut.BackColor = System.Drawing.Color.White;
+        StatOut.Location = new System.Drawing.Point(1054, 245);
+        StatOut.Name = "StatOut";
+        StatOut.Size = new System.Drawing.Size(133, 78);
+        StatOut.TabIndex = 16;
+        StatOut.Text = "Message";
+        // 
         // Form1
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.DimGray;
         ClientSize = new System.Drawing.Size(1280, 720);
+        Controls.Add(StatOut);
         Controls.Add(label3);
         Controls.Add(label2);
         Controls.Add(EY);
@@ -135,6 +146,8 @@ partial class Form1
         Text = "Form1";
         ResumeLayout(false);
     }
+
+    private System.Windows.Forms.Label StatOut;
 
     private System.Windows.Forms.Label label3;
 

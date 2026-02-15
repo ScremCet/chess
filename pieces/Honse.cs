@@ -2,7 +2,7 @@
 
 public class Honse : CommonPiece
 {
-    public Honse(Allegiance allegiance, int x, int y) : base(allegiance, x, y){}
+    public Honse(Allegiance allegiance, (int,int) pos) : base(allegiance, pos){}
     
     private static readonly HashSet<(int,int)> _honseMove = new()
     {
@@ -14,13 +14,13 @@ public class Honse : CommonPiece
         return GetAllegiance() == Allegiance.White ? '♘' : '♞';
     }
     
-    public override bool IsValidMove(int x, int y, Func<int, int, Piece?> getPiece)
+    public override bool IsValidMove((int,int) dest, Func<(int,int), Piece?> getPiece)
     {
         // move vector
         
-        if (_honseMove.Contains((x - X , y - Y)))
+        if (_honseMove.Contains(Coord.Vector(Pos,dest)))
         {
-            Piece? whatThere = getPiece(x, y);
+            Piece? whatThere = getPiece(dest);
             if (whatThere is null || !OnSameTeam(whatThere))
             {
                 return true;

@@ -20,17 +20,17 @@ public partial class Form1 : Form
         create_Board();
     }
 
-    public void create_Square(bool isThisWhite, int x, int y)
+    public void create_Square(bool isThisWhite, (int, int) pos)
     {
         Panel square = new Panel();
 
         square.BackColor = isThisWhite ? Color.White : Color.Black;
         
-        square.Location = new Point(_StartX + (x * _SquareSize), _StartY + (y * _SquareSize));
+        square.Location = new Point(_StartX + (pos.Item1 * _SquareSize), _StartY + (pos.Item2 * _SquareSize));
         square.MaximumSize = new Size(_SquareSize, _SquareSize);
         square.MinimumSize = new Size(_SquareSize, _SquareSize);
         square.Size = new Size(_SquareSize, _SquareSize);
-        square.Name = "panel_" + x + "_" + y;
+        square.Name = "panel_" + pos.Item1 + "_" + pos.Item2;
 
         Label displayPiece = new Label();
         displayPiece.MinimumSize = new Size(_SquareSize-(_SquareBorder*2), _SquareSize-(_SquareBorder*2));
@@ -40,24 +40,24 @@ public partial class Form1 : Form
         displayPiece.Font = new Font("Comic Sans", 30);
         displayPiece.TextAlign = ContentAlignment.TopCenter;
         displayPiece.BackColor = Color.White;
-        Piece? currentPiece = _gameLogic.GetPiece(x, y);
+        Piece? currentPiece = _gameLogic.GetPiece(pos);
         displayPiece.Text = currentPiece == null ? " " : currentPiece.GetSymbol().ToString();
         square.Controls.Add(displayPiece);
         
         Controls.Add(square);
     }
     
-    public void update_Square(int x, int y)
+    public void update_Square((int,int)pos)
     {
         // find the panel at x and y
         
-        Panel? p = Controls[Controls.IndexOfKey("panel_" + x + "_" + y)] as Panel;
+        Panel? p = Controls[Controls.IndexOfKey("panel_" + pos.Item1 + "_" + pos.Item2)] as Panel;
 
         // find the label
         Label? displayPiece = p.Controls[p.Controls.IndexOfKey("label_piece")] as Label;
         
         // get the piece
-        Piece? currentPiece = _gameLogic.GetPiece(x, y);
+        Piece? currentPiece = _gameLogic.GetPiece(pos);
 
         // update
         displayPiece.Text = currentPiece == null ? " " : currentPiece.GetSymbol().ToString();
@@ -73,7 +73,7 @@ public partial class Form1 : Form
         {
             for (int x = 0; x < 8; x++)
             {
-                create_Square(isWhite, x, y);
+                create_Square(isWhite, (x, y));
                 isWhite = !isWhite;
             }
             isWhite = !isWhite;
@@ -81,16 +81,18 @@ public partial class Form1 : Form
         ResumeLayout(false);
     }
 
+    public void update_StatOut(TurnStatus status)
+    {
+        StatOut.Text = status.ToString();
+    }
     private void submit_Click_1(object sender, EventArgs e)
     {
-        int sx = SX.Text[0] - 65;
-        int sy = 7 - (SY.Text[0] - 49);
-        int ex = EX.Text[0] - 65;
-        int ey = 7 - (EY.Text[0] - 49);
-        
-        _gameLogic.submitTurn(sx,sy,ex,ey);
-        update_Square(sx,sy);
-        update_Square(ex,ey);
+        (int,int) start = (SX.Text[0] - 65, 7 - (SY.Text[0] - 49));
+        (int, int) end = (EX.Text[0] - 65, 7 - (EY.Text[0] - 49));
+        TurnStatus ts = _gameLogic.submitTurn(start,end);
+        update_StatOut(ts);
+        update_Square(start);
+        update_Square(end);
         label1.Text = _gameLogic.GetPlayerTurn() + "'s turn";
     }
 }

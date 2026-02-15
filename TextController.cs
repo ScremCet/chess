@@ -22,20 +22,20 @@ class TextController
         Console.ResetColor();
         
     }
-    static void PrintBoard(ChessBoard board)
-    {
-        bool isWhite = true;
-
-        // Rows  
-        foreach (List<Piece?> pieces in board.gridOfPieces)
-        {
-            foreach (Piece? piece in pieces)
-            {
-                PrintSquare(isWhite,piece == null ? ' ' : piece.GetSymbol());
-                isWhite = !isWhite;
-            }
-            Console.WriteLine();
-            isWhite = !isWhite;
-        }
-    }
+    // static void PrintBoard(ChessBoard board)
+    // {
+    //     bool isWhite = true;
+    //
+    //     // Rows  
+    //     foreach (List<Piece?> pieces in board.gridOfPieces)
+    //     {
+    //         foreach (Piece? piece in pieces)
+    //         {
+    //             PrintSquare(isWhite,piece == null ? ' ' : piece.GetSymbol());
+    //             isWhite = !isWhite;
+    //         }
+    //         Console.WriteLine();
+    //         isWhite = !isWhite;
+    //     }
+    // }
 }

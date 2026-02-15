@@ -2,24 +2,38 @@
 
 public abstract class CommonPiece : Piece
 {
-    public CommonPiece(Allegiance allegiance, int x, int y)
+    public CommonPiece(Allegiance allegiance, (int,int) pos)
     {
-        this._allegiance = allegiance;
-        X = x;
-        Y = y;
+        _allegiance = allegiance;
+        Pos = pos;
+        _hasMoved = false;
     }
-    private Allegiance _allegiance;
+    private readonly Allegiance _allegiance;
 
     public abstract char GetSymbol();
-    public int X { get; set; }
-    public int Y { get; set; }
+
+    protected bool _hasMoved;
+    private ((int, int), bool) _lastState;
+    public (int,int) Pos { get; private set; }
+
+    public void Move((int, int) move)
+    {
+        _lastState = (Pos, _hasMoved);
+        Pos = move;
+        _hasMoved = true;
+    }
+
+    public void UndoMove()
+    {
+        (Pos, _hasMoved) = _lastState;
+    }
 
     public bool OnSameTeam(Piece other)
     {
         return GetAllegiance() == other.GetAllegiance();
     }
 
-    public abstract bool IsValidMove(int x, int y, Func<int, int, Piece?> getPiece);
+    public abstract bool IsValidMove((int,int) dest, Func<(int,int), Piece?> getPiece);
     public Allegiance GetAllegiance()
     {
         return _allegiance;
