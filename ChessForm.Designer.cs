@@ -1,6 +1,6 @@
 ﻿namespace chess;
 
-partial class Form1
+partial class ChessForm
 {
     /// <summary>
     ///  Required designer variable.
@@ -143,7 +143,7 @@ partial class Form1
         Controls.Add(submit);
         Controls.Add(label1);
         Tag = "";
-        Text = "Form1";
+        Text = "Chess by 102206830";
         ResumeLayout(false);
     }
 

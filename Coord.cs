@@ -4,6 +4,8 @@ namespace chess;
 
 public class Coord
 {
+    private static List<((int, int), (int, int))> _noMoves = new();
+
     public static (int,int) Vector((int,int) a , (int,int) b)
     {
         return(b.Item1 - a.Item1,b.Item2 - a.Item2);
@@ -16,5 +18,10 @@ public class Coord
     public static (int, int) Step((int, int) vector)
     {
         return (Math.Sign(vector.Item1),Math.Sign(vector.Item2));
+    }
+    
+    public static List<((int, int), (int, int))> MovesNone()
+    {
+        return _noMoves;
     }
 }

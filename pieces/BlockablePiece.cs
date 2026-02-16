@@ -4,10 +4,10 @@ public abstract class BlockablePiece : CommonPiece
 {
     protected BlockablePiece(Allegiance allegiance, (int,int) pos) : base(allegiance, pos){}
     
-    public override bool IsValidMove((int, int) dest, Func<(int, int), Piece?> getPiece)
+    public override List<((int,int),(int,int))> ValidateMove((int, int) dest, Func<(int, int), Piece?> getPiece)
     {
         (int, int) moveVector = Coord.Vector(Pos, dest);
-        if (GetValidMoves().Contains(moveVector))
+        if (GetPotentialMoves().Contains(moveVector))
         {
             Piece? whatThere = getPiece(dest);
             if (whatThere is null || !OnSameTeam(whatThere))
@@ -18,14 +18,12 @@ public abstract class BlockablePiece : CommonPiece
                 {
                     if (getPiece(c) != null)
                     {
-                        return false;
+                        return Coord.MovesNone();
                     }
                 }
-                return true;
+                return new(){(Pos,dest)};
             }
         }
-        return false;
+        return Coord.MovesNone();
     }
-
-    protected abstract HashSet<(int,int)> GetValidMoves();
 }

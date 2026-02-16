@@ -27,7 +27,7 @@ public class Rook : BlockablePiece
 
     //IsValidMove() Inherited from BlockablePiece
 
-    protected override HashSet<(int, int)> GetValidMoves()
+    protected override HashSet<(int, int)> GetPotentialMoves()
     {
         return _rookMove;
     }

@@ -16,16 +16,21 @@ public class King : CommonPiece
     {
         return GetAllegiance() == Allegiance.White ? '♔' : '♚';
     }
-    public override bool IsValidMove((int,int) dest, Func<(int,int), Piece?> getPiece)
+    public override List<((int,int),(int,int))> ValidateMove((int,int) dest, Func<(int,int), Piece?> getPiece)
     {
         if (_kingMove.Contains(Coord.Vector(Pos, dest)))
         {
             Piece? whatThere = getPiece(dest);
             if (whatThere is null || !OnSameTeam(whatThere))
             {
-                return true;
+                return new(){(Pos,dest)};
             }
         }
-        return false;
+        return Coord.MovesNone();
+    }
+
+    protected override HashSet<(int, int)> GetPotentialMoves()
+    {
+        return _kingMove;
     }
 }

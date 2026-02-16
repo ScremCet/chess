@@ -2,14 +2,14 @@ using Chess;
 
 namespace chess;
 
-public partial class Form1 : Form
+public partial class ChessForm : Form
 {
     private const int _SquareSize = 75;
     private const int _SquareBorder = 15;
     private const int _StartX = 340;
     private const int _StartY = 40;
     private GameLogic _gameLogic;
-    public Form1()
+    public ChessForm()
     {
         MaximizeBox = false;
         MaximumSize = new Size(1280, 720);

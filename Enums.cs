@@ -4,14 +4,13 @@ public enum TurnStatus
 {
     Success,
     ErrCheck,
-    ErrWillCheck,
+    Check,
     CheckMate,
     ErrNoPiece, 
     ErrInvalidAllegiance, 
     ErrInvalidMove, 
     ErrInvalidSpecialMove
 }
-
 public enum Allegiance
 {
     White,

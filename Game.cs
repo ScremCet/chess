@@ -75,12 +75,6 @@ class GameLogic
         return _playerTurn;
     }
 
-    private bool block;
-    public bool IsCheckMate()
-    {
-        throw new NotImplementedException();
-    }
-
     public List<Piece> GetPiecesOfAllegiance(Allegiance allegiance)
     {
         return allegiance == Allegiance.White ? _piecesWhite : _piecesBlack;
@@ -104,7 +98,7 @@ class GameLogic
         //check all possible attacks
         foreach (Piece piece in enemyPieces)
         {
-            if (piece.IsValidMove(currentKing.Pos, GetPiece))
+            if (piece.ValidateMove(currentKing.Pos, GetPiece).Count > 0)
             {
                 return true;
             }
@@ -112,37 +106,62 @@ class GameLogic
         return false;
     }
     
-    private TurnStatus MovePiece(Piece selectedPiece, (int,int) end)
+    public bool IsCheckMate(Allegiance allegiance)
+    {
+        List<Piece>  firendlyPieces = GetPiecesOfAllegiance(allegiance);
+        foreach (Piece piece in firendlyPieces)
+        {
+            foreach ((int, int) move in piece.ValidMoves(GetPiece))
+            {
+                TurnStatus status = MovePiece(piece, move,true);
+                if (status == TurnStatus.Success)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void UndoMove((int, int) endPos, Piece? endPiece, Piece startPiece, (int, int) startPos)
+    {
+        _board.Set(endPos, endPiece);
+        if (endPiece != null)
+        {
+            List<Piece> enemyPieces = GetPiecesOfAllegiance(endPiece.GetAllegiance());
+            _deadPieces.Remove(endPiece);
+            enemyPieces.Add(endPiece);
+        }
+        startPiece.UndoMove();
+        _board.Set(startPos, startPiece);
+    }
+    private TurnStatus MovePiece(Piece startPiece, (int,int) endPos, bool alwaysUndo)
     {
          // Do move
-         (int, int) originalPos = selectedPiece.Pos;
-        _board.Set(originalPos, null);
-        selectedPiece.Move(end);
-        Piece ? endPiece = GetPiece(end);
+        (int, int) startPos = startPiece.Pos;
+        _board.Set(startPos, null);
+        startPiece.Move(endPos);
+        Piece ? endPiece = GetPiece(endPos);
         if (endPiece != null)
         {
             List<Piece> enemyPieces = GetPiecesOfAllegiance(endPiece.GetAllegiance());
             enemyPieces.Remove(endPiece);
             _deadPieces.Add(endPiece);
         }
-        _board.Set(end, selectedPiece);
+        _board.Set(endPos, startPiece);
         
         // If this creates a king in check
         if (IsCheck(GetPlayerTurn()))
         {
             // roll back
-            _board.Set(end, endPiece);
-            if (endPiece != null)
-            {
-                List<Piece> enemyPieces = GetPiecesOfAllegiance(endPiece.GetAllegiance());
-                _deadPieces.Remove(endPiece);
-                enemyPieces.Add(endPiece);
-            }
-            selectedPiece.UndoMove();
-            _board.Set(originalPos, selectedPiece);
+            UndoMove(endPos, endPiece, startPiece, startPos);
             return TurnStatus.ErrCheck;
         }
-        
+
+        if (alwaysUndo)
+        {
+            UndoMove(endPos, endPiece, startPiece, startPos);
+        }
 
         // else commit
         return TurnStatus.Success;
@@ -160,16 +179,26 @@ class GameLogic
         {
             return TurnStatus.ErrInvalidAllegiance;
         }
-        if (!selectedPiece.IsValidMove(end, GetPiece))
+
+        List<((int, int), (int, int))> moves = selectedPiece.ValidateMove(end, GetPiece);
+        if (moves.Count == 0)
         {
             return TurnStatus.ErrInvalidMove;
         }
-        TurnStatus mp = MovePiece(selectedPiece, end);
+        TurnStatus mp = MovePiece(selectedPiece, end, false);
         if (mp != TurnStatus.Success) {
             return mp;
         }
         //switch turn
         _playerTurn = GetOtherAllegiance(_playerTurn);
+        if (IsCheck(GetPlayerTurn()))
+        {
+            if (IsCheckMate(GetPlayerTurn()))
+            {
+                return TurnStatus.CheckMate;
+            }
+            return TurnStatus.Check;
+        }
         return mp;
     }
 }
