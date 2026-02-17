@@ -89,10 +89,14 @@ public partial class ChessForm : Form
     {
         (int,int) start = (SX.Text[0] - 65, 7 - (SY.Text[0] - 49));
         (int, int) end = (EX.Text[0] - 65, 7 - (EY.Text[0] - 49));
-        TurnStatus ts = _gameLogic.submitTurn(start,end);
-        update_StatOut(ts);
-        update_Square(start);
-        update_Square(end);
+        (TurnStatus, List<((int, int), (int, int))>) ts = _gameLogic.submitTurn(start,end);
+        update_StatOut(ts.Item1);
+        foreach (((int, int), (int, int)) move in ts.Item2)
+        {
+            update_Square(move.Item1);
+            update_Square(move.Item2);
+        }
         label1.Text = _gameLogic.GetPlayerTurn() + "'s turn";
     }
+    
 }

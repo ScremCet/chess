@@ -47,7 +47,8 @@ public class Pawn : CommonPiece
                         
                         if (pawn != null && !OnSameTeam(pawn) && pawn.DoubleJumped())
                         {
-                            return new(){(dest,pawn.Pos) , (Pos,dest)};
+                            //returning 2 moves
+                            return new(){(Pos,dest), (Pos,pawn.Pos)};
                         }
                     }
                     return Coord.MovesNone();
