@@ -9,10 +9,28 @@ public enum TurnStatus
     ErrNoPiece, 
     ErrInvalidAllegiance, 
     ErrInvalidMove, 
-    ErrInvalidSpecialMove
+    ErrNoPromotionChoice
 }
 public enum Allegiance
 {
     White,
     Black
+}
+
+public enum Tests
+{
+    Default,
+    EnPassant,
+    PawnPromotion,
+    Castle,
+    CheckOrCheckMate
+}
+
+public enum Promotion
+{
+    None,
+    Queen,
+    Bishop,
+    Rook,
+    Honse
 }

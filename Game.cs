@@ -15,9 +15,12 @@ class GameLogic
     private Allegiance _playerTurn;
     private King _kingWhite;
     private King _kingBlack;
+    private readonly Func<Promotion> _promotion;
 
     private void defaultStart()
     {
+        _kingWhite = new King(Allegiance.White, (4, 7), IsCheck);
+        _kingBlack = new King(Allegiance.Black, (4, 0), IsCheck);       
         _piecesBlack =
         [
             new Rook(Allegiance.Black, (0, 0)),
@@ -51,19 +54,76 @@ class GameLogic
         }
     }
    
-
-    public GameLogic()
+    private void Castle()
     {
+        _kingWhite = new King(Allegiance.White, (4, 7), IsCheck);
+        _kingBlack = new King(Allegiance.Black, (4, 0), IsCheck);       
+        _piecesBlack =
+        [
+            new Rook(Allegiance.Black, (0, 0)),
+            new Honse(Allegiance.Black, (1, 0)),
+            new Bishop(Allegiance.Black, (2, 0)),
+            _kingBlack,       
+            new Rook(Allegiance.Black, (7, 0)),
+            //rest of pieces
+        ];
+        _piecesWhite =
+        [
+            new Rook(Allegiance.White, (0, 7)),
+            new Queen(Allegiance.White, (3, 7)),
+            _kingWhite,
+            new Bishop(Allegiance.White, (0, 4)),
+            new Rook(Allegiance.White, (7, 7)),
+        ];
+    }
+    private void PawnPromotion()
+    {
+        _kingWhite = new King(Allegiance.White, (4, 7), IsCheck);
+        _kingBlack = new King(Allegiance.Black, (4, 0), IsCheck);       
+        _piecesBlack =
+        [
+            new Pawn(Allegiance.Black , (3 , 1)),
+            new Pawn(Allegiance.Black , (4 , 1)),
+            new Pawn(Allegiance.Black , (5 , 1)),
+            _kingBlack,       
+            //rest of pieces
+        ];
+        _piecesWhite =
+        [
+            new Pawn(Allegiance.White , (1 , 1)),
+            _kingWhite,
+        ];
+    }
+    
+
+    public GameLogic(Tests test, Func<Promotion> promotion)
+    {
+        _promotion = promotion;
         _deadPieces = new List<Piece>();
         _playerTurn = Allegiance.White;
-        _kingWhite = new King(Allegiance.White, (4, 7));
-        _kingBlack = new King(Allegiance.Black, (4, 0));            
         _board = new ChessBoard();
-        defaultStart(); // other scenarios can be tested by changing the start func
+        switch (test)
+        {
+            case Tests.Default:
+                defaultStart();
+                break;
+            case Tests.Castle:
+                Castle();
+                break;
+            // case Tests.EnPassant:
+            //     EnPassant();
+            //     break;
+            case Tests.PawnPromotion:
+                PawnPromotion();
+                break;
+            // case Tests.CheckOrCheckMate:
+            //     CheckorCheckMate();
+            //     break;
+        }
         _board.Add(_piecesWhite);
         _board.Add(_piecesBlack);
     }
-
+    
     public Piece? GetPiece((int,int) target)
     {
         return _board.Get(target);
@@ -105,11 +165,6 @@ class GameLogic
         }
         return false;
     }
-
-    // public static bool GetCheckStatus()
-    // {
-    //     return IsCheck(GetPlayerTurn());
-    // }
     
     public bool IsCheckMate(Allegiance allegiance)
     {
@@ -217,10 +272,42 @@ class GameLogic
         {
             return (TurnStatus.ErrInvalidMove, Coord.MovesNone());
         }
+        // Pawn Promotion
+        Pawn? pawn = selectedPiece as Pawn;
+        if (pawn != null)
+        {
+            if (end.Item2 == 0 || end.Item2 == 7)
+            {
+                Promotion promotion = _promotion();
+                switch (promotion)
+                {
+                    case Promotion.None:
+                        return (TurnStatus.ErrNoPromotionChoice, Coord.MovesNone());
+                    case Promotion.Queen:
+                        selectedPiece = new Queen(pawn.GetAllegiance(), pawn.Pos);
+                        break;
+                    case Promotion.Honse:
+                        selectedPiece = new Honse(pawn.GetAllegiance(), pawn.Pos);
+                        break;
+                    case Promotion.Bishop:
+                        selectedPiece = new Bishop(pawn.GetAllegiance(), pawn.Pos);
+                        break;
+                    case Promotion.Rook:
+                        selectedPiece = new Rook(pawn.GetAllegiance(), pawn.Pos);
+                        break;
+                }
+                _board.Set(selectedPiece.Pos, selectedPiece);
+                List<Piece> pieces = GetPiecesOfAllegiance(selectedPiece.GetAllegiance());
+                pieces.Remove(pawn);
+                pieces.Add(selectedPiece);
+            }
+        }
+        
         TurnStatus mp = MakeMoves(moves, false);
         if (mp != TurnStatus.Success) {
             return (mp, Coord.MovesNone());
         }
+        
         //switch turn
         _playerTurn = GetOtherAllegiance(_playerTurn);
         if (IsCheck(GetPlayerTurn()))

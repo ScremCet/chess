@@ -32,9 +32,9 @@ public class Rook : BlockablePiece
         return _rookMove;
     }
 
-    // public bool GetHasMoved()
-    // {
-    //     return _hasMoved;
-    // }
+    public bool GetHasMoved()
+    {
+        return _hasMoved;
+    }
 }
 

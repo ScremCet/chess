@@ -1,4 +1,5 @@
 using Chess;
+using chess.pieces;
 
 namespace chess;
 
@@ -16,7 +17,7 @@ public partial class ChessForm : Form
         MinimumSize = new Size(1280, 720);
         StartPosition = FormStartPosition.CenterScreen;
         InitializeComponent();
-        _gameLogic = new GameLogic();
+        _gameLogic = new GameLogic(Tests.Default, Promote);
         create_Board();
     }
 
@@ -81,6 +82,18 @@ public partial class ChessForm : Form
         ResumeLayout(false);
     }
 
+    public void update_Board()
+    {
+        // Rows
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                update_Square((x, y));
+            }
+        }
+    }
+    
     public void update_StatOut(TurnStatus status)
     {
         StatOut.Text = status.ToString();
@@ -98,5 +111,50 @@ public partial class ChessForm : Form
         }
         label1.Text = _gameLogic.GetPlayerTurn() + "'s turn";
     }
-    
+
+    private Promotion Promote()
+    {
+        Promotion promotion = new Promotion();
+        switch (PromotionChoice.Text)
+        {
+            case  "Queen":
+                promotion = Promotion.Queen;
+                break;
+            case "Rook":
+                promotion = Promotion.Rook;
+                break;
+            case "Bishop":
+                promotion = Promotion.Bishop;
+                break;
+            case "Honse":
+                promotion = Promotion.Honse;
+                break;
+        }
+        return promotion;
+    }
+    private void LoadButton_Click(object sender, EventArgs e)
+    {
+        Tests test = Tests.Default;
+        switch (SelectedTest.Text)
+        {
+            case "Default":
+                test = Tests.Default;
+                break;
+            case"En Passant":
+                test = Tests.EnPassant;
+                break;
+            case "Pawn promotion":
+                test = Tests.PawnPromotion;
+                break;
+            case "Castle":
+                test = Tests.Castle;
+                break;
+            case "Check/Check Mate":
+                test = Tests.CheckOrCheckMate;
+                break;
+        }
+
+        _gameLogic = new GameLogic(test,Promote);
+        update_Board();
+    }
 }

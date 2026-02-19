@@ -12,9 +12,10 @@ public class Pawn : CommonPiece
     public override List<((int,int), (int,int))> ValidateMove((int,int) dest, Func<(int,int), Piece?> getPiece)
     {
         (int,int) vect = Coord.Vector(Pos, dest);
-        (int, int) relVect = (vect.Item1, vect.Item2);
+        (int, int) relVect = vect;
         if (GetAllegiance() == Allegiance.White)
         {
+            //Used to dictate move direction for pawn
             relVect.Item2 *= -1;
         }
 

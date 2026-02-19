@@ -54,6 +54,10 @@ partial class ChessForm
         label17 = new System.Windows.Forms.Label();
         label18 = new System.Windows.Forms.Label();
         label19 = new System.Windows.Forms.Label();
+        LoadButton = new System.Windows.Forms.Button();
+        SelectedTest = new System.Windows.Forms.ComboBox();
+        PromotionChoice = new System.Windows.Forms.ComboBox();
+        label20 = new System.Windows.Forms.Label();
         SuspendLayout();
         // 
         // submit
@@ -319,12 +323,55 @@ partial class ChessForm
         label19.Text = "8";
         label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
         // 
+        // LoadButton
+        // 
+        LoadButton.Location = new System.Drawing.Point(34, 594);
+        LoadButton.Name = "LoadButton";
+        LoadButton.Size = new System.Drawing.Size(138, 33);
+        LoadButton.TabIndex = 34;
+        LoadButton.Text = "Load Test";
+        LoadButton.UseVisualStyleBackColor = true;
+        LoadButton.Click += LoadButton_Click;
+        // 
+        // SelectedTest
+        // 
+        SelectedTest.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        SelectedTest.FormattingEnabled = true;
+        SelectedTest.Items.AddRange(new object[] { "Default", "En Passant", "Pawn promotion", "Castle", "Check/Check Mate" });
+        SelectedTest.Location = new System.Drawing.Point(34, 565);
+        SelectedTest.Name = "SelectedTest";
+        SelectedTest.Size = new System.Drawing.Size(138, 23);
+        SelectedTest.TabIndex = 35;
+        // 
+        // PromotionChoice
+        // 
+        PromotionChoice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        PromotionChoice.FormattingEnabled = true;
+        PromotionChoice.Items.AddRange(new object[] { "Queen", "Rook", "Bishop", "Honse" });
+        PromotionChoice.Location = new System.Drawing.Point(1040, 72);
+        PromotionChoice.Name = "PromotionChoice";
+        PromotionChoice.Size = new System.Drawing.Size(138, 23);
+        PromotionChoice.TabIndex = 36;
+        // 
+        // label20
+        // 
+        label20.BackColor = System.Drawing.Color.White;
+        label20.Location = new System.Drawing.Point(1040, 40);
+        label20.Name = "label20";
+        label20.Size = new System.Drawing.Size(137, 23);
+        label20.TabIndex = 37;
+        label20.Text = "Promotion";
+        // 
         // ChessForm
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.DimGray;
         ClientSize = new System.Drawing.Size(1280, 720);
+        Controls.Add(label20);
+        Controls.Add(PromotionChoice);
+        Controls.Add(SelectedTest);
+        Controls.Add(LoadButton);
         Controls.Add(label19);
         Controls.Add(label18);
         Controls.Add(label17);
@@ -354,6 +401,12 @@ partial class ChessForm
         Text = "Chess by 102206830";
         ResumeLayout(false);
     }
+
+    private System.Windows.Forms.ComboBox PromotionChoice;
+    private System.Windows.Forms.Label label20;
+
+    private System.Windows.Forms.Button LoadButton;
+    private System.Windows.Forms.ComboBox SelectedTest;
 
     private System.Windows.Forms.Label label17;
     private System.Windows.Forms.Label label18;
