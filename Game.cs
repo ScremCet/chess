@@ -125,7 +125,7 @@ class GameLogic
         ];
         
     }
-    private void CheckorCheckMate()
+    private void CheckOrCheckMate()
     {
         _kingWhite = new King(Allegiance.White, (4, 7), IsCheck);
         _kingBlack = new King(Allegiance.Black, (4, 0), IsCheck);       
@@ -165,7 +165,7 @@ class GameLogic
                 PawnPromotion();
                 break;
             case Tests.CheckOrCheckMate:
-                CheckorCheckMate();
+                CheckOrCheckMate();
                 break;
             case Tests.StaleMate:
                 StaleMate();
