@@ -17,7 +17,7 @@ public partial class ChessForm : Form
         MinimumSize = new Size(1280, 720);
         StartPosition = FormStartPosition.CenterScreen;
         InitializeComponent();
-        _gameLogic = new GameLogic(Tests.Default, Promote);
+        _gameLogic = new GameLogic(Tests.DefaultOrRestart, Promote);
         create_Board();
     }
 
@@ -100,14 +100,28 @@ public partial class ChessForm : Form
     }
     private void submit_Click_1(object sender, EventArgs e)
     {
+        if (SX.Text == "" || SY.Text == "" || EX.Text == "" || EY.Text == "")
+        {
+            StatOut.Text = "ErrMissingValues";
+            return;
+        }
         (int,int) start = (SX.Text[0] - 65, 7 - (SY.Text[0] - 49));
         (int, int) end = (EX.Text[0] - 65, 7 - (EY.Text[0] - 49));
         (TurnStatus, List<((int, int), (int, int))>) ts = _gameLogic.submitTurn(start,end);
         update_StatOut(ts.Item1);
+        
         foreach (((int, int), (int, int)) move in ts.Item2)
         {
             update_Square(move.Item1);
             update_Square(move.Item2);
+        }
+        if (ts.Item1 == TurnStatus.CheckMate)
+        {
+            MessageBox.Show( "Checkmate! " + _gameLogic.GetOtherAllegiance(_gameLogic.GetPlayerTurn()) + " wins. To start new game select Default/Restart in Load Test");
+        }
+        if (ts.Item1 == TurnStatus.StaleMate)
+        {
+            MessageBox.Show( "Stalemate! To start new game select Default/Restart in Load Test");
         }
         label1.Text = _gameLogic.GetPlayerTurn() + "'s turn";
     }
@@ -134,11 +148,14 @@ public partial class ChessForm : Form
     }
     private void LoadButton_Click(object sender, EventArgs e)
     {
-        Tests test = Tests.Default;
+        Tests test = Tests.DefaultOrRestart;
         switch (SelectedTest.Text)
         {
-            case "Default":
-                test = Tests.Default;
+            case "":
+                MessageBox.Show("Restart or test not selected");
+                return;
+            case "Default/Restart":
+                test = Tests.DefaultOrRestart;
                 break;
             case"En Passant":
                 test = Tests.EnPassant;
@@ -152,9 +169,13 @@ public partial class ChessForm : Form
             case "Check/Check Mate":
                 test = Tests.CheckOrCheckMate;
                 break;
+            case "Stale Mate":
+                test = Tests.StaleMate;
+                break;
         }
 
         _gameLogic = new GameLogic(test,Promote);
         update_Board();
+        label1.Text = _gameLogic.GetPlayerTurn() + "'s turn";
     }
 }

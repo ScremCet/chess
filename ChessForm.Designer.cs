@@ -337,7 +337,7 @@ partial class ChessForm
         // 
         SelectedTest.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         SelectedTest.FormattingEnabled = true;
-        SelectedTest.Items.AddRange(new object[] { "Default", "En Passant", "Pawn promotion", "Castle", "Check/Check Mate" });
+        SelectedTest.Items.AddRange(new object[] { "Default/Restart", "En Passant", "Pawn promotion", "Castle", "Check/Check Mate", "Stale Mate" });
         SelectedTest.Location = new System.Drawing.Point(34, 565);
         SelectedTest.Name = "SelectedTest";
         SelectedTest.Size = new System.Drawing.Size(138, 23);

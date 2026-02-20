@@ -17,7 +17,7 @@ class GameLogic
     private King _kingBlack;
     private readonly Func<Promotion> _promotion;
 
-    private void defaultStart()
+    private void DefaultStart()
     {
         _kingWhite = new King(Allegiance.White, (4, 7), IsCheck);
         _kingBlack = new King(Allegiance.Black, (4, 0), IsCheck);       
@@ -94,8 +94,56 @@ class GameLogic
             _kingWhite,
         ];
     }
-    
-
+    private void StaleMate()
+    {
+        _kingWhite = new King(Allegiance.White, (4, 2), IsCheck);
+        _kingBlack = new King(Allegiance.Black, (5, 0), IsCheck);       
+        _piecesBlack =
+        [
+            _kingBlack,
+        ];
+        _piecesWhite =
+        [
+            _kingWhite,
+            new Pawn(Allegiance.White , (5 , 1)),
+        ];
+    }
+    private void EnPassant()
+    {
+        _kingWhite = new King(Allegiance.White, (4, 7), IsCheck);
+        _kingBlack = new King(Allegiance.Black, (4, 0), IsCheck);       
+        _piecesBlack =
+        [
+            _kingBlack,       
+            new Pawn(Allegiance.Black, (3, 4) )
+        ];
+        
+        _piecesWhite =
+        [
+            _kingWhite,
+            new Pawn(Allegiance.White , (4 , 6) )
+        ];
+        
+    }
+    private void CheckorCheckMate()
+    {
+        _kingWhite = new King(Allegiance.White, (4, 7), IsCheck);
+        _kingBlack = new King(Allegiance.Black, (4, 0), IsCheck);       
+        _piecesBlack =
+        [
+            _kingBlack,       
+            new Rook(Allegiance.Black, (4, 1)),
+            new Pawn(Allegiance.Black , (5 , 1)),
+            new Pawn(Allegiance.Black , (3 , 1)),
+        ];
+        
+        _piecesWhite =
+        [
+            _kingWhite,
+            new Queen(Allegiance.White, (6, 7)),
+        ];
+        
+    }
     public GameLogic(Tests test, Func<Promotion> promotion)
     {
         _promotion = promotion;
@@ -104,21 +152,24 @@ class GameLogic
         _board = new ChessBoard();
         switch (test)
         {
-            case Tests.Default:
-                defaultStart();
+            case Tests.DefaultOrRestart:
+                DefaultStart();
                 break;
             case Tests.Castle:
                 Castle();
                 break;
-            // case Tests.EnPassant:
-            //     EnPassant();
-            //     break;
+            case Tests.EnPassant:
+                EnPassant();
+                break;
             case Tests.PawnPromotion:
                 PawnPromotion();
                 break;
-            // case Tests.CheckOrCheckMate:
-            //     CheckorCheckMate();
-            //     break;
+            case Tests.CheckOrCheckMate:
+                CheckorCheckMate();
+                break;
+            case Tests.StaleMate:
+                StaleMate();
+                break;
         }
         _board.Add(_piecesWhite);
         _board.Add(_piecesBlack);
@@ -131,7 +182,6 @@ class GameLogic
 
     public Allegiance GetPlayerTurn()
     {
-        
         return _playerTurn;
     }
 
@@ -145,7 +195,7 @@ class GameLogic
         return allegiance == Allegiance.White ? _kingWhite : _kingBlack;
     }
     
-    Allegiance GetOtherAllegiance(Allegiance allegiance)
+    public Allegiance GetOtherAllegiance(Allegiance allegiance)
     {
         return allegiance == Allegiance.White ? Allegiance.Black :  Allegiance.White;
     }
@@ -166,7 +216,7 @@ class GameLogic
         return false;
     }
     
-    public bool IsCheckMate(Allegiance allegiance)
+    public bool CanMove(Allegiance allegiance)
     {
         List<Piece>  firendlyPieces = GetPiecesOfAllegiance(allegiance);
         foreach (Piece piece in firendlyPieces)
@@ -176,11 +226,11 @@ class GameLogic
                 TurnStatus status = MovePiece(piece.Pos , move,true);
                 if (status == TurnStatus.Success)
                 {
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     private void UndoMove((int, int) endPos, Piece? endPiece, Piece? startPiece, (int, int) startPos)
@@ -312,11 +362,15 @@ class GameLogic
         _playerTurn = GetOtherAllegiance(_playerTurn);
         if (IsCheck(GetPlayerTurn()))
         {
-            if (IsCheckMate(GetPlayerTurn()))
+            if (!CanMove(GetPlayerTurn()))
             {
                 return (TurnStatus.CheckMate, moves);
             }
             return (TurnStatus.Check, moves);
+        }
+        if (!CanMove(GetPlayerTurn()))
+        {
+            return (TurnStatus.StaleMate, moves);
         }
         return (mp, moves);
     }

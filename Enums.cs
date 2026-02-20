@@ -9,7 +9,8 @@ public enum TurnStatus
     ErrNoPiece, 
     ErrInvalidAllegiance, 
     ErrInvalidMove, 
-    ErrNoPromotionChoice
+    ErrNoPromotionChoice,
+    StaleMate
 }
 public enum Allegiance
 {
@@ -19,11 +20,13 @@ public enum Allegiance
 
 public enum Tests
 {
-    Default,
+    None,
+    DefaultOrRestart,
     EnPassant,
     PawnPromotion,
     Castle,
-    CheckOrCheckMate
+    CheckOrCheckMate,
+    StaleMate
 }
 
 public enum Promotion
