@@ -1,14 +1,7 @@
 ﻿# Chess
 <img src="doc/Chess.png" width="580" alt="demo of the chess board">
 
-## Successes    
-- created individual files for Programm components
-- Shortened piece list by making for loop for pawns
-- Added Chessboard to Form through for loop
-- Started Turn Submission Functions
+## Use
+Open project in either VisualStudio or Jetbrains Rider to play
 
-
-## Issues
-Output Terminal doesnt seem to contain ASCII
-
-potential switch to Windows Forms
+or download the release [here](https://github.com/ScremCet/chess/releases/tag/v1.0.0), unzip file and run the .exe
